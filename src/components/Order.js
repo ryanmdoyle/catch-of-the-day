@@ -1,11 +1,14 @@
 import React from 'react';
-import {formatPrice} from '../helpers';
+import { formatPrice } from '../helpers';
 
 class Order extends React.Component {
   renderOrder = key => {
     const fish = this.props.fishes[key];
     const count = this.props.order[key];
-    const isAvailable = fish.status === 'available'
+    const isAvailable = fish && fish.status === 'available'
+    // makes sure that fish are present before rendering, fixes showing all fish as unavailable before rebase pulls
+    // the App compDidMount loads local order (without rebase fishes) faster, so you need to return null so the order doesnt first render with no fish available
+    if (!fish) return null;
     if (!isAvailable) {
       return <li key={key}>Sorry {fish ? fish.name : 'fish'} is no longer available.</li>
     }
@@ -16,7 +19,7 @@ class Order extends React.Component {
       </li>
     )
   }
-  
+
   render() {
     const orderIds = Object.keys(this.props.order)
     const total = orderIds.reduce((prevTotal, key) => {
