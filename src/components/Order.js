@@ -1,5 +1,6 @@
 import React from 'react';
 import { formatPrice } from '../helpers';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 class Order extends React.Component {
   renderOrder = key => {
@@ -9,15 +10,25 @@ class Order extends React.Component {
     // makes sure that fish are present before rendering, fixes showing all fish as unavailable before rebase pulls
     // the App compDidMount loads local order (without rebase fishes) faster, so you need to return null so the order doesnt first render with no fish available
     if (!fish) return null;
+    
     if (!isAvailable) {
-      return <li key={key}>Sorry {fish ? fish.name : 'fish'} is no longer available.</li>
+      return (
+        <CSSTransition classNames='order' key={key} timout={{enter: 250, exit: 250}}>
+          <li key={key}>
+            Sorry {fish ? fish.name : 'fish'} is no longer available.
+          </li>
+        </CSSTransition>
+      )
     }
+    
     return (
-      <li key={key}>
-        {count} lbs {fish.name}
-        {formatPrice(count * fish.price)}
-        <button onClick={() => this.props.removeFromOrder(key)} >Remove From Order</button>
-      </li>
+      <CSSTransition classNames='order' key={key} timout={{enter: 250, exit: 250}}>
+        <li key={key}>
+          {count} lbs {fish.name}
+          {formatPrice(count * fish.price)}
+          <button onClick={() => this.props.removeFromOrder(key)} >Remove From Order</button>
+        </li>
+      </CSSTransition>
     )
   }
 
@@ -36,9 +47,9 @@ class Order extends React.Component {
     return (
       <div className='order-wrap'>
         <h2>Order</h2>
-        <ul className='order'>
+        <TransitionGroup component='ul' className='order'>
           {orderIds.map(this.renderOrder)}
-        </ul>
+        </TransitionGroup>
         <div className='total'>
           Total: <strong>{formatPrice(total)}</strong>
         </div>
