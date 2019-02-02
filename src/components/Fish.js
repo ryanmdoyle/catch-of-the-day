@@ -1,16 +1,28 @@
 import React from 'react';
-import {formatPrice} from '../helpers';
+import PropTypes from 'prop-types';
+import { formatPrice } from '../helpers';
 
-class Fish extends React.Component{
-  
+class Fish extends React.Component {
+  // in statefull components the proptypes are within the compnent
+  static propTypes = {
+    details: PropTypes.shape({
+      image: PropTypes.string,
+      name: PropTypes.string,
+      status: PropTypes.string,
+      desc: PropTypes.string,
+      price: PropTypes.number
+    }),
+    addToOrder: PropTypes.func,
+  }
+
   handleClick = () => {
     this.props.addToOrder(this.props.index)
   }
-  
+
   render() {
     // const image = this.props.details.image;
     // const name = this.props.details.name;
-    const {image, name, price, desc, status} = this.props.details; //same as above, using destructuring
+    const { image, name, price, desc, status } = this.props.details; //same as above, using destructuring
     const isAvailable = status === 'available';
 
     return (
