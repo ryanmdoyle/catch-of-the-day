@@ -9,24 +9,37 @@ class Order extends React.Component {
     const isAvailable = fish && fish.status === 'available'
     // makes sure that fish are present before rendering, fixes showing all fish as unavailable before rebase pulls
     // the App compDidMount loads local order (without rebase fishes) faster, so you need to return null so the order doesnt first render with no fish available
+    const transitionOptions = {
+      classNames: 'order',
+      key,
+      timeout: { enter: 500, exit: 500 }
+    }
+
     if (!fish) return null;
-    
+
     if (!isAvailable) {
       return (
-        <CSSTransition classNames='order' key={key} timout={{enter: 250, exit: 250}}>
+        <CSSTransition {...transitionOptions}>
           <li key={key}>
             Sorry {fish ? fish.name : 'fish'} is no longer available.
           </li>
         </CSSTransition>
       )
     }
-    
+
     return (
-      <CSSTransition classNames='order' key={key} timout={{enter: 250, exit: 250}}>
+      <CSSTransition {...transitionOptions} >
         <li key={key}>
-          {count} lbs {fish.name}
-          {formatPrice(count * fish.price)}
-          <button onClick={() => this.props.removeFromOrder(key)} >Remove From Order</button>
+          <span>
+            <TransitionGroup component='span' className='count'>
+              <CSSTransition {...transitionOptions}>
+                <span>{count}</span>
+              </CSSTransition>
+            </TransitionGroup>
+            lbs {fish.name}
+            {formatPrice(count * fish.price)}
+            <button onClick={() => this.props.removeFromOrder(key)} >Remove From Order</button>
+          </span>
         </li>
       </CSSTransition>
     )
