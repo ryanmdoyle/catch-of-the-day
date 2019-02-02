@@ -14,7 +14,7 @@ class App extends React.Component {
   };
 
   static propTypes = {
-    match: PropTypes.Object
+    match: PropTypes.object
   }
 
   componentDidMount() {
@@ -31,7 +31,6 @@ class App extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log(this.state);
     localStorage.setItem(this.props.match.params.storeId, JSON.stringify(this.state.order))
   }
 
